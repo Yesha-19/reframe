@@ -1,12 +1,12 @@
 "use client";
-
+import React from "react";
 import { useVideoEditor } from "@/hooks/useVideoEditor";
 import FileUpload from "./FileUpload";
 import VideoPreview from "./VideoPreview";
 import PresetSelector from "./PresetSelector";
 import FramingControl from "./FramingControl";
 import TrimControl from "./TrimControl";
-import RotateControl from "./RotateControl";
+import RotateControl from "./RotateControl"; 
 import AudioSpeedControl from "./AudioSpeedControl";
 import ExportSettings from "./ExportSettings";
 import ExportOverlay from "./ExportOverlay";
@@ -89,16 +89,25 @@ export default function VideoEditor() {
                   <Section icon={<Scissors size={12} />} title="Trim" delay={50}>
                     <TrimControl recipe={recipe} onChange={updateRecipe} duration={duration} />
                   </Section>
-                  <Section icon={<RotateCw size={12} />} title="Rotate" delay={100}>
-                    <RotateControl recipe={recipe} onChange={updateRecipe} />
-                  </Section>
+                  <details className="group">
+                    <summary className="flex items-center gap-2 cursor-pointer select-none text-[10px] font-heading font-bold uppercase tracking-widest text-[var(--muted)] py-1">
+                      <span className="text-film-500 opacity-80 transition-transform duration-200 group-open:rotate-90">›</span>
+                      Advanced options
+                      <div className="flex-1 h-px bg-[var(--border)]" />
+                    </summary>
+                    <div className="mt-4 space-y-6">
+                      <Section icon={<RotateCw size={12} />} title="Rotate">
+                        <RotateControl recipe={recipe} onChange={updateRecipe} />
+                      </Section>
+                      <Section icon={<SlidersHorizontal size={12} />} title="Export quality">
+                        <ExportSettings recipe={recipe} onChange={updateRecipe} />
+                      </Section>
+                    </div>
+                  </details>
                 </div>
                 <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5 space-y-6">
                   <Section icon={<Volume2 size={12} />} title="Audio & Speed" delay={150}>
                     <AudioSpeedControl recipe={recipe} onChange={updateRecipe} />
-                  </Section>
-                  <Section icon={<SlidersHorizontal size={12} />} title="Export quality" delay={200}>
-                    <ExportSettings recipe={recipe} onChange={updateRecipe} />
                   </Section>
                 </div>
               </div>
