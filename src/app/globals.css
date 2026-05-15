@@ -56,9 +56,16 @@ body::before {
   }
 }
 
+
 details > summary {
   list-style: none;
 }
 details > summary::-webkit-details-marker {
   display: none;
+
+:focus-visible {
+  outline: 2px solid #e63946;
+  outline-offset: 2px;
+  border-radius: 4px;
+
 }
