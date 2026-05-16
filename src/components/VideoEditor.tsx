@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import { useVideoEditor } from "@/hooks/useVideoEditor";
 import FileUpload from "./FileUpload";
 import VideoPreview from "./VideoPreview";
@@ -8,6 +8,7 @@ import FramingControl from "./FramingControl";
 import TrimControl from "./TrimControl";
 import RotateControl from "./RotateControl"; 
 import AudioSpeedControl from "./AudioSpeedControl";
+import FormatSelector from "./FormatSelector";
 import ExportSettings from "./ExportSettings";
 import ExportOverlay from "./ExportOverlay";
 import DownloadResult from "./DownloadResult";
@@ -46,8 +47,9 @@ export default function VideoEditor() {
   const {
     file, duration, recipe, status, progress,
     result, error, updateRecipe,
-    handleFileSelect, handleExport, cancelExport, reset,
+    handleFileSelect, handleExport, cancelExport, reset, resetSettings,
   } = useVideoEditor();
+  const [copied, setCopied] = useState(false);
 
   
   const isProcessing = status === "loading-engine" || status === "exporting";
@@ -223,6 +225,44 @@ export default function VideoEditor() {
 </Section>
                     <AudioSpeedControl recipe={recipe} onChange={updateRecipe} />
                   </Section>
+<Section icon={<Volume2 size={12} />} title="Audio & Speed" delay={150}>
+                    <AudioSpeedControl recipe={recipe} onChange={updateRecipe} />
+                  </Section>
+
+                  <Section icon={<SlidersHorizontal size={12} />} title="Adjustments" delay={175}>
+                    <div className="space-y-5">
+                      {/* Brightness */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span>Brightness</span>
+                          <button type="button" onClick={() => updateRecipe({ brightness: 0 })} className="text-film-500 hover:underline">Reset</button>
+                        </div>
+                        <input type="range" min="-1" max="1" step="0.1" value={recipe.brightness} onChange={(e) => updateRecipe({ brightness: Number(e.target.value) })} className="w-full" />
+                      </div>
+
+                      {/* Contrast */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span>Contrast</span>
+                          <button type="button" onClick={() => updateRecipe({ contrast: 1 })} className="text-film-500 hover:underline">Reset</button>
+                        </div>
+                        <input type="range" min="0" max="2" step="0.1" value={recipe.contrast} onChange={(e) => updateRecipe({ contrast: Number(e.target.value) })} className="w-full" />
+                      </div>
+
+                      {/* Saturation */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span>Saturation</span>
+                          <button type="button" onClick={() => updateRecipe({ saturation: 1 })} className="text-film-500 hover:underline">Reset</button>
+                        </div>
+                        <input type="range" min="0" max="3" step="0.1" value={recipe.saturation} onChange={(e) => updateRecipe({ saturation: Number(e.target.value) })} className="w-full" />
+                      </div>
+                    </div>
+                  </Section>
+
+                  <Section icon={<SlidersHorizontal size={12} />} title="Output format" delay={190}>
+                    <FormatSelector recipe={recipe} onChange={updateRecipe} />
+                  </Section>
                 </div>
               </div>
             )}
@@ -237,6 +277,18 @@ export default function VideoEditor() {
                   <p className="font-heading font-bold text-sm">Error</p>
                   <p className="text-film-600 text-xs mt-1">{error}</p>
                 </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(error).then(() => {
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    });
+                  }}
+                  className="px-3 py-1.5 bg-[var(--border)] border border-[var(--border)] rounded-lg text-xs font-semibold hover:opacity-80 transition-colors shrink-0 whitespace-nowrap"
+                  aria-label="Copy error message to clipboard"
+                >
+                  {copied ? "Copied!" : "Copy error"}
+                </button>
                 {!error.includes("Validation Failed") && (
                   <button
                     onClick={handleExport}
@@ -267,18 +319,30 @@ export default function VideoEditor() {
               <Section icon={<Crop size={12} />} title="Framing" delay={100}>
                 <FramingControl recipe={recipe} onChange={updateRecipe} />
               </Section>
+
+              <div className="pt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={resetSettings}
+                  className="text-[9px] font-heading font-bold uppercase tracking-widest text-[var(--muted)] hover:text-film-600 transition-all opacity-60 hover:opacity-100"
+                >
+                  Reset all settings
+                </button>
+              </div>
             </div>
 
             <button
               type="button"
               onClick={handleExport}
               disabled={!file || isProcessing}
+              aria-label='Export video'
+              aria-disabled={!file || isProcessing ? "true" : undefined}
               className={cn(
                 "w-full flex items-center justify-center gap-3 py-5 rounded-xl",
                 "font-display text-2xl tracking-widest transition-all duration-200",
                 file && !isProcessing
                   ? "bg-film-600 hover:bg-film-700 hover:scale-[1.01] text-white shadow-lg shadow-film-200 active:scale-[0.98] cursor-pointer"
-                  : "bg-[var(--border)] text-[var(--muted)] cursor-not-allowed"
+                  : "bg-[var(--border)] text-[var(--muted)] opacity-40 cursor-not-allowed"
               )}
             >
               <Zap size={20} className={cn(file && !isProcessing && "animate-pulse")} />
@@ -287,26 +351,6 @@ export default function VideoEditor() {
           </div>
         </div>
       </div>
-
-      <footer className="w-full border-t border-[var(--border)] py-6 mt-auto">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[11px] font-heading text-[var(--muted)] tracking-wide">
-            2026 Reframe. Free, open source, no login required.
-          </p>
-<p className="text-[10px] text-[var(--muted)]">
-  All video processing happens locally in your browser using FFmpeg.wasm.
-</p>
-          <a
-            href="https://github.com/magic-peach/reframe"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="min-h-[44px] min-w-[44px] flex items-center gap-1.5 px-2 text-[11px] font-heading font-medium text-[var(--muted)] hover:text-film-600 transition-colors"
-          >
-            <Github size={13} />
-            Source on GitHub
-          </a>
-        </div>
-      </footer>
     </div>
   );
 }
