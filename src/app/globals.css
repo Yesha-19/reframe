@@ -58,7 +58,7 @@ body::before {
 
 
 details > summary {
-  list-style: none;
+  cursor: pointer;
 }
 details > summary::-webkit-details-marker {
   display: none;
