@@ -8,7 +8,10 @@
   --border: #E8E3DC;
   --text: #181412;
   --muted: #7C756F;
-  --accent: #e63946;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --film-600: #e63946;
+  --film-400: #ff6b6b;
 }
 
 .dark {
@@ -47,6 +50,14 @@ body::before {
 #__next, main, [data-nextjs-scroll-focus-boundary] {
   position: relative;
   z-index: 1;
+}
+
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: ease;
+  transition-duration: 200ms;
 }
 
 @keyframes fade-in {
