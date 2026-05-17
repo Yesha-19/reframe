@@ -8,7 +8,11 @@
   --surface: #ffffff;
   --border: #E8E3DC;
   --text: #181412;
+<<<<<<< HEAD
   --muted: #7C756F;
+=======
+ --muted: #5C5550;
+>>>>>>> d48f09f (fix: restore light mode CSS variables in root)
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
   --film-600: #e63946;
@@ -23,6 +27,7 @@
 body {
   background-color: var(--bg);
   color: var(--text);
+   transition: background-color 0.3s ease, color 0.3s ease;
   font-family: var(--font-body), "DM Sans", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -52,6 +57,13 @@ body::before {
   transition-duration: 200ms;
 }
 
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: ease;
+  transition-duration: 200ms;
+}
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
