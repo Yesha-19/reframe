@@ -2,24 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Light mode tokens ── */
 :root {
   --bg: #F7F4F0;
   --surface: #ffffff;
   --border: #E8E3DC;
   --text: #181412;
- --muted: #5C5550;
+  --muted: #5C5550;
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
   --film-600: #e63946;
   --film-400: #ff6b6b;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --error-bg: #fee2e2;
+  --error-border: #fca5a5;
+  --error-hover: #fecaca;
 }
 
-* {
-  box-sizing: border-box;
+/* ── Dark mode tokens ── */
+.dark {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --error-bg: #7f1d1d;
+  --error-border: #991b1b;
+  --error-hover: #991b1b;
 }
 
-/* ── Base styles ── */
 body {
   background-color: var(--bg);
   color: var(--text);
@@ -53,30 +68,6 @@ body::before {
   transition-duration: 200ms;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@layer utilities {
-  .font-display {
-    font-family: var(--font-display), sans-serif;
-  }
-  .font-heading {
-    font-family: var(--font-heading), sans-serif;
-  }
-  .animate-fade-in {
-    animation: fade-in 0.4s ease-out both;
-  }
-}
-
-
-details > summary {
-  list-style: none;
-}
-details > summary::-webkit-details-marker {
-  display: none;
-}
 :focus-visible {
   outline: 2px solid #e63946;
   outline-offset: 2px;
