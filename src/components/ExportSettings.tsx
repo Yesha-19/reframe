@@ -76,10 +76,10 @@ export default function ExportSettings({
           min={18}
           max={30}
           step={1}
-          value={recipe.quality}
+          value={48 - recipe.quality}
           onChange={(e) =>
             onChange({
-              quality: Number(
+              quality: 48 - Number(
                 e.target.value
               ),
             })
@@ -96,11 +96,11 @@ export default function ExportSettings({
         >
           <div className="flex justify-between">
             <span className="text-sm text-[var(--muted)]">
-              Best quality
+              Smallest file
             </span>
 
             <span className="text-sm text-[var(--muted)]">
-              Smallest file
+              Best quality
             </span>
           </div>
 
@@ -162,13 +162,11 @@ export default function ExportSettings({
                 })
               }
               aria-label="Enable video stabilization"
-              aria-checked={recipe.stabilization}
               className="w-full accent-film-600 cursor-pointer"
             />
           </span>
         </div>
 
-        {/* Short descriptive label explaining what the setting does */}
         <p className="text-xs text-[var(--muted)] mb-1">
           Reduce camera shake
         </p>
