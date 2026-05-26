@@ -1,5 +1,6 @@
 "use client";
 
+import { validateVideoMagicBytes } from "@/lib/validateVideoFile";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { Film, FolderOpen } from "lucide-react";
 import LottiePlayer from "./LottiePlayer";
@@ -83,12 +84,13 @@ export default function FileUpload({
   }, []);
 
   // ── File validation ───────────────────────────────────
-  const handleFile = useCallback((file: File) => {
+  const handleFile = useCallback( async(file: File) => {
     setError("");
     setWarning("");
 
-    if (!file.type.startsWith("video/")) {
-      setError("Please drop a valid video file (MP4, MOV, AVI, WebM, etc.)");
+    const result = await validateVideoMagicBytes(file);
+    if (!result.valid) {
+      setError(result.error);
       return;
     }
 
@@ -183,7 +185,10 @@ export default function FileUpload({
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) handleFile(f);
+          if (f) {
+            handleFile(f).catch(() => {});
+            e.target.value = "";
+          }
         }}
       />
     </div>
@@ -254,7 +259,10 @@ export default function FileUpload({
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) handleFile(f);
+          if (f) {
+            handleFile(f).catch(() => {});
+            e.target.value = "";
+          }
         }}
       />
     </div>
